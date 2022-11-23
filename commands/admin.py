@@ -1,12 +1,12 @@
 from rich import print
 
 from config import save_profile
-from jira_helper import create_project, ProjectAlreadyExists, request_jira
+from jira_helper import create_project, ProjectAlreadyExists, request_jira_raw
 
 
 def admin_command(cloud_url: str, project_name: str, account_name: str, access_token: str):
-    check_connection_status, check_connection_response = request_jira(cloud_url, "/rest/api/3/myself",
-                                                                      account_name, access_token)
+    check_connection_status, check_connection_response = request_jira_raw(cloud_url, "/rest/api/3/myself",
+                                                                          account_name, access_token)
 
     if check_connection_status != 200:
         print("[bold red]Could not connect to your site! Please check the values you entered[/bold red] :boom:")

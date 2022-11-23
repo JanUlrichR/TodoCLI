@@ -1,6 +1,7 @@
 import typer
 
 from commands.admin import admin_command
+from commands.ls import ls_command
 from commands.open import open_command
 
 app = typer.Typer()
@@ -19,6 +20,11 @@ def admin(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
 def open():
     url = open_command()
     typer.launch(url)
+
+
+@app.command()
+def ls():
+    ls_command()
 
 
 if __name__ == "__main__":

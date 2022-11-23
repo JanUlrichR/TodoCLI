@@ -7,20 +7,27 @@ class ProjectAlreadyExists(Exception):
     pass
 
 
-def request_jira(base_url, rest_url, username, token):
+def request_jira(profile, rest_url, http_method="GET", payload=None):
+    return request_jira_raw(profile.base_url, rest_url, profile.account_name, profile.access_token, http_method,
+                            payload)
+
+
+def request_jira_raw(base_url, rest_url, username, token, http_method="GET", payload=None):
     url = f"{base_url}{rest_url}"
 
     auth = HTTPBasicAuth(username, token)
 
     headers = {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Content-Type": "application/json"
     }
     try:
         response = requests.request(
-            "GET",
+            http_method,
             url,
             headers=headers,
-            auth=auth
+            auth=auth,
+            data=payload
         )
         return response.status_code, json.loads(response.text)
     except requests.exceptions.HTTPError as errh:
