@@ -14,6 +14,9 @@ class Profile:
     project_name: str
     project_id: int
 
+    def get_project_key(self) -> str:
+        return self.project_name[0:9].upper()
+
 
 class CurrentProfileNotFound(Exception):
     pass
