@@ -2,6 +2,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json
 
+from config import Profile
+
 
 class ProjectAlreadyExists(Exception):
     pass
@@ -29,6 +31,42 @@ def request_jira_raw(base_url, rest_url, username, token, http_method="GET", pay
             auth=auth,
             data=payload
         )
+        return response.status_code, json.loads(response.text)
+    except requests.exceptions.HTTPError as errh:
+        print("Http Error:", errh)
+    except requests.exceptions.ConnectionError as errc:
+        print("Error Connecting:", errc)
+    except requests.exceptions.Timeout as errt:
+        print("Timeout Error:", errt)
+    except requests.exceptions.RequestException as err:
+        print("OOps: Something Else", err)
+
+    return 400, None
+
+
+def create_issue(profile: Profile, payload):
+    return create_issue_raw(profile.base_url, profile.account_name, profile.access_token, payload)
+
+
+def create_issue_raw(base_url, username, token, payload):
+    url = f"{base_url}/rest/api/3/issue"
+
+    auth = HTTPBasicAuth(username, token)
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.request(
+            "POST",
+            url,
+            data=payload,
+            headers=headers,
+            auth=auth
+        )
+        print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
         return response.status_code, json.loads(response.text)
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)

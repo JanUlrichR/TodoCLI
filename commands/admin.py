@@ -15,7 +15,7 @@ def admin_command(cloud_url: str, project_name: str, account_name: str, access_t
     try:
         _, create_project_response = create_project(project_name, check_connection_response['accountId'], cloud_url,
                                                     account_name, access_token)
-        save_profile(cloud_url, account_name, access_token, project_name, create_project_response["id"])
+        save_profile(cloud_url, account_name, access_token, project_name, create_project_response["id"], check_connection_response['accountId'])
     except ProjectAlreadyExists:
         print(
             f"[bold red]Project with name [/bold red][bold yellow]'{project_name}'[/bold yellow][bold red] already exists. Please choose another name or delete this project[/bold red] :boom:")

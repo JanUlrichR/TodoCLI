@@ -24,14 +24,23 @@ def try_parsing_date(text):
 titleize = lambda x: x.capitalize()
 ident = lambda x: x if x else ""
 locale.setlocale(locale.LC_ALL, "de_DE.utf8")
-pretty_date = lambda x: try_parsing_date(x).strftime("%a, %d. %b %Y")
+pretty_date = lambda x: try_parsing_date(x).strftime("%a, %d. %b %Y") if x else ""
+labelize = lambda x: ", ".join(x)
+
+def get_description(x):
+    # Easier to ask for forgiveness than permission
+    try:
+        return x["content"][0]["content"][0]["text"]
+    except (KeyError, IndexError):
+        return ""
+
 
 fields_config = {
     "summary": [titleize, ident],
     "priority": [titleize, lambda x: x['name']],
-    "description": [titleize, ident],
-    "created": [titleize, pretty_date],
-    "labels": [titleize, ident],
+    "description": [titleize, get_description],
+    #"created": [titleize, pretty_date],
+    "labels": [titleize, labelize],
     "duedate": [lambda x: "Due Date", pretty_date],
     "status": [titleize, lambda x: ":white_heavy_check_mark:" if x["name"] != "To Do" else ":white_large_square:"]
 }
@@ -55,7 +64,7 @@ def ls_command():
     try:
         profile = load_profile()
 
-        jql = f"project = {profile.get_project_key()}"
+        jql = f"project = {profile.get_project_key()} ORDER BY priority DESC, duedate ASC"
 
         payload = json.dumps({
             "expand": [

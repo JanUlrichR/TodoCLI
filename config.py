@@ -13,6 +13,7 @@ class Profile:
     access_token: str
     project_name: str
     project_id: int
+    user_id: str
 
     def get_project_key(self) -> str:
         return self.project_name[0:9].upper()
@@ -22,8 +23,8 @@ class CurrentProfileNotFound(Exception):
     pass
 
 
-def save_profile(base_url: str, account_name: str, access_token: str, project_name: str, project_id: int):
-    return _save_profile(Profile(base_url, account_name, access_token, project_name, project_id))
+def save_profile(base_url: str, account_name: str, access_token: str, project_name: str, project_id: int, user_id: str):
+    return _save_profile(Profile(base_url, account_name, access_token, project_name, project_id, user_id))
 
 
 def _save_profile(profile: Profile):

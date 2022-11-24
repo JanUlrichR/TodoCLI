@@ -1,8 +1,13 @@
+from datetime import datetime
+from typing import List
+
 import typer
 
+from commands.add import add_command
 from commands.admin import admin_command
 from commands.ls import ls_command
 from commands.open import open_command
+from issue import Priority
 
 app = typer.Typer()
 
@@ -25,6 +30,15 @@ def open():
 @app.command()
 def ls():
     ls_command()
+
+
+@app.command()
+def add(summary: str,
+        description: str,
+        priority: Priority = typer.Option(Priority.medium, "--priority", "-p", case_sensitive=False),
+        labels: List[str] = typer.Option([], "--label", "-l"),
+        due_date: datetime = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
+    add_command(summary, description, priority, labels, due_date)
 
 
 if __name__ == "__main__":
