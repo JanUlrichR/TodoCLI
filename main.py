@@ -28,8 +28,11 @@ def open():
 
 
 @app.command()
-def ls():
-    ls_command()
+def ls(priorities: List[Priority] = typer.Option([], "--priority", "-p", case_sensitive=False, help="Filter for some priorities"),
+       all: bool = typer.Option(False, "--all", "-a", help="Show all, even closed, todo's"),
+       labels: List[str] = typer.Option([], "--label", "-l", help="Issue needs to have this label")
+       ):
+    ls_command(all, priorities, labels)
 
 
 @app.command()
