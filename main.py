@@ -22,15 +22,16 @@ def admin(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
 
 
 @app.command()
-def open():
-    url = open_command()
-    typer.launch(url)
+def open(keys: List[str] = typer.Option([], "--key", "-k", help="Todos to open, if no key provided board will be opened")):
+    urls = open_command(keys)
+    for url in urls:
+        typer.launch(url)
 
 
 @app.command()
 def ls(priorities: List[Priority] = typer.Option([], "--priority", "-p", case_sensitive=False, help="Filter for some priorities"),
        all: bool = typer.Option(False, "--all", "-a", help="Show all, even closed, todo's"),
-       labels: List[str] = typer.Option([], "--label", "-l", help="Issue needs to have this label")
+       labels: List[str] = typer.Option([], "--label", "-l", help="Todos needs to have this label")
        ):
     ls_command(all, priorities, labels)
 
