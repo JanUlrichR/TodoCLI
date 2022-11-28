@@ -5,6 +5,7 @@ import typer
 
 from commands.add import add_command
 from commands.admin import admin_command
+from commands.delete import delete_command
 from commands.finish import finish_command
 from commands.ls import ls_command
 from commands.open import open_command
@@ -52,9 +53,15 @@ def add(summary: str,
 def finish(key: str, reason: Optional[str] = typer.Argument(None)):
     finish_command(key, reason)
 
+
 @app.command()
 def close(key: str, reason: Optional[str] = typer.Argument(None)):
     finish(key, reason)
+
+
+@app.command()
+def delete(key: str):
+    delete_command(key)
 
 
 if __name__ == "__main__":

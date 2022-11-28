@@ -3,6 +3,8 @@ from jira_helper import request_jira
 import json
 from rich import print
 
+from util import ensure_key
+
 
 def close_issue(key: str, profile: Profile):
     payload = json.dumps({
@@ -11,7 +13,8 @@ def close_issue(key: str, profile: Profile):
         }
     })
 
-    status, response = request_jira(profile, f"/rest/api/3/issue/{key}/transitions", http_method="POST", payload=payload)
+    status, response = request_jira(profile, f"/rest/api/3/issue/{key}/transitions", http_method="POST",
+                                    payload=payload)
     if status == 400:
         print("Issue could not be transitioned")
     if status == 404:
@@ -47,7 +50,7 @@ def add_comment(key: str, reason: str, profile: Profile):
 def finish_command(key: str, reason: str):
     profile = load_profile()
 
-    prefix_ensured_key = key if key.startswith(profile.get_project_key()) else f"{profile.get_project_key()}-{key}"
+    prefix_ensured_key = ensure_key(profile, key)
 
     close_issue(prefix_ensured_key, profile)
 
