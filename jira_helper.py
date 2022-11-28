@@ -31,7 +31,7 @@ def request_jira_raw(base_url, rest_url, username, token, http_method="GET", pay
             auth=auth,
             data=payload
         )
-        return response.status_code, json.loads(response.text)
+        return response.status_code, json.loads(response.text) if response.text else {}
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
     except requests.exceptions.ConnectionError as errc:
