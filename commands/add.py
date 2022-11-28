@@ -8,7 +8,7 @@ from jira_helper import create_issue
 
 
 def add_command(summary: str,
-                description: str,
+                text: str,
                 priority: Priority,
                 labels: List[str],
                 due_date: Optional[datetime]):
@@ -31,7 +31,7 @@ def add_command(summary: str,
                         "type": "paragraph",
                         "content": [
                             {
-                                "text": description,
+                                "text": text,
                                 "type": "text"
                             }
                         ]

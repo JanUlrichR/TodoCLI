@@ -30,7 +30,7 @@ pretty_date = lambda x: try_parsing_date(x).strftime("%a, %d. %b %Y") if x else 
 labelize = lambda x: ", ".join(x)
 
 
-def get_description(x):
+def get_text(x):
     # Easier to ask for forgiveness than permission
     try:
         return x["content"][0]["content"][0]["text"]
@@ -41,7 +41,7 @@ def get_description(x):
 fields_config = {
     "summary": [titleize, ident],
     "priority": [titleize, lambda x: x['name']],
-    "description": [titleize, get_description],
+    "description": [titleize, get_text],
     # "created": [titleize, pretty_date],
     "labels": [titleize, labelize],
     "duedate": [lambda x: "Due Date", pretty_date],

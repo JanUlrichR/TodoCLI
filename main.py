@@ -6,6 +6,7 @@ import typer
 from commands.add import add_command
 from commands.admin import admin_command
 from commands.delete import delete_command
+from commands.edit import edit_command
 from commands.finish import finish_command
 from commands.ls import ls_command
 from commands.open import open_command
@@ -42,11 +43,22 @@ def ls(priorities: List[Priority] = typer.Option([], "--priority", "-p", case_se
 
 @app.command()
 def add(summary: str,
-        description: str,
+        text: str,
         priority: Priority = typer.Option(Priority.medium, "--priority", "-p", case_sensitive=False),
         labels: List[str] = typer.Option([], "--label", "-l"),
         due_date: datetime = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
-    add_command(summary, description, priority, labels, due_date)
+    add_command(summary, text, priority, labels, due_date)
+
+
+@app.command()
+def edit(key: str,
+         summary: Optional[str] = typer.Option(None, "--summary", "-s"),
+         text: Optional[str] = typer.Option(None, "--text", "-t"),
+         priority: Optional[Priority] = typer.Option(None, "--priority", "-p", case_sensitive=False),
+         add_labels: List[str] = typer.Option([], "--label-a", "-la"),
+         delete_labels: List[str] = typer.Option([], "--label-d", "-ld"),
+         due_date: Optional[datetime] = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
+    edit_command(key, summary, text, priority, add_labels, delete_labels, due_date)
 
 
 @app.command()

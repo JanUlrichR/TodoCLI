@@ -24,4 +24,3 @@ def delete_command(key: str):
         print("Issue not found")
     else:
         print(f"Deletion of Todo with key {prefix_ensured_key} successful")
-
