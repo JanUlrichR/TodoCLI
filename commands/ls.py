@@ -5,7 +5,7 @@ from typing import List
 from rich.console import Console
 from rich.table import Table
 
-from config import load_current_profile, CurrentProfileNotFound
+from config import load_current_profile, CurrentProfileNotFound, get_current_key
 from issue import Priority
 from jira_helper import request_jira
 
@@ -49,8 +49,8 @@ fields_config = {
 }
 
 
-def pretty_print_issues(issues, fields):
-    table = Table(title="Todos", padding=1, collapse_padding=True)
+def pretty_print_issues(title, issues, fields):
+    table = Table(title=title, padding=1, collapse_padding=True)
     table.add_column("Key")
     for field, [title_function, _] in fields.items():
         justify = "center" if field == "status" else "left"
@@ -91,6 +91,6 @@ def ls_command_by_jql(profile, jql):
         if status != 200:
             print("Error retrieving the tasks")
             return
-        pretty_print_issues(response["issues"], fields_config)
+        pretty_print_issues(profile.project_name,response["issues"], fields_config)
     except CurrentProfileNotFound as e:
         print(e)
