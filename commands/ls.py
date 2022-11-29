@@ -5,7 +5,7 @@ from typing import List
 from rich.console import Console
 from rich.table import Table
 
-from config import load_profile, CurrentProfileNotFound
+from config import load_current_profile, CurrentProfileNotFound
 from issue import Priority
 from jira_helper import request_jira
 
@@ -64,7 +64,7 @@ def pretty_print_issues(issues, fields):
 
 
 def ls_command(all: bool, priorities: List[Priority], labels: List[str]):
-    profile = load_profile()
+    profile = load_current_profile()
     all_jql_part = ' AND resolution IS EMPTY' if not all else ''
     priorities_jql_part = f' AND priority in ({", ".join(priorities)})' if len(priorities) else ''
     labels_jql_part = "".join([f' AND labels = {label}' for label in labels]) if len(labels) else ''

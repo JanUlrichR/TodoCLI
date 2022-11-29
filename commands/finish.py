@@ -1,4 +1,4 @@
-from config import load_profile, Profile
+from config import load_current_profile, Profile
 from jira_helper import request_jira
 import json
 from rich import print
@@ -48,7 +48,7 @@ def add_comment(key: str, reason: str, profile: Profile):
 
 
 def finish_command(key: str, reason: str):
-    profile = load_profile()
+    profile = load_current_profile()
 
     prefix_ensured_key = ensure_key(profile, key)
 

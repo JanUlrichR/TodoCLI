@@ -2,7 +2,7 @@ import json
 
 from rich import print
 
-from config import save_profile, Profile
+from config import save_profile, Profile, switch_profile
 from jira_helper import create_project, ProjectAlreadyExists, request_jira_raw, request_jira
 
 
@@ -17,8 +17,10 @@ def admin_command(cloud_url: str, project_name: str, account_name: str, access_t
     try:
         _, create_project_response = create_project(project_name, check_connection_response['accountId'], cloud_url,
                                                     account_name, access_token)
+        print(create_project_response)
         profile = save_profile(cloud_url, account_name, access_token, project_name, create_project_response["id"],
                                check_connection_response['accountId'])
+        switch_profile(project_name)
         add_user_as_admin(profile)
     except ProjectAlreadyExists:
         print(

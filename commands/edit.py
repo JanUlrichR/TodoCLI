@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from typing import Optional, List
 
-from config import load_profile
+from config import load_current_profile
 from issue import Priority
 from jira_helper import request_jira
 from util import ensure_key
@@ -15,7 +15,7 @@ def edit_command(key: Optional[str],
                  add_labels: List[str],
                  delete_labels: List[str],
                  due_date: Optional[datetime]):
-    profile = load_profile()
+    profile = load_current_profile()
     prefix_ensured_key = ensure_key(profile, key)
     payload_raw = {}
 

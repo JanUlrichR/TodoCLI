@@ -93,7 +93,7 @@ def create_project(name: str, lead_id: str, base_url: str, username: str, token:
     project_key = name[0:9].upper()
 
     payload = json.dumps({
-        "text": "Automatically created by TodoCLI",
+        "description": "Automatically created by TodoCLI",
         "leadAccountId": lead_id,
         "url": "https://github.com/JanUlrichR/TodoCLI",
         "projectTemplateKey": "com.atlassian.jira-core-project-templates:jira-core-simplified-task-tracking",

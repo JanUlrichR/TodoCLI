@@ -1,13 +1,12 @@
 import typer
 
-from commands.admin import add_user_as_admin
-from config import load_profile
+from config import load_current_profile
 from jira_helper import request_jira
 from util import ensure_key
 
 
 def delete_command(key: str):
-    profile = load_profile()
+    profile = load_current_profile()
 
     prefix_ensured_key = ensure_key(profile, key)
     delete_confirmation = typer.confirm(f"Are you sure you want to delete todo with key {prefix_ensured_key}?")

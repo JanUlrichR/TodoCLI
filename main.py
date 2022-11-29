@@ -10,6 +10,7 @@ from commands.edit import edit_command
 from commands.finish import finish_command
 from commands.ls import ls_command
 from commands.open import open_command
+from commands.profile import profile_command
 from issue import Priority
 
 app = typer.Typer()
@@ -59,6 +60,11 @@ def edit(key: str,
          delete_labels: List[str] = typer.Option([], "--label-d", "-ld"),
          due_date: Optional[datetime] = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
     edit_command(key, summary, text, priority, add_labels, delete_labels, due_date)
+
+
+@app.command()
+def profile(key: str):
+    profile_command(key)
 
 
 @app.command()

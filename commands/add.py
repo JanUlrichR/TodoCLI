@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from typing import List, Optional
 
-from config import load_profile
+from config import load_current_profile
 from issue import Priority
 from jira_helper import create_issue
 
@@ -12,7 +12,7 @@ def add_command(summary: str,
                 priority: Priority,
                 labels: List[str],
                 due_date: Optional[datetime]):
-    profile = load_profile()
+    profile = load_current_profile()
 
     payload_dict = {
         "fields": {
