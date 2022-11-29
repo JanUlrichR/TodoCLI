@@ -20,6 +20,9 @@ app = typer.Typer()
 @app.command()
 def open(keys: List[str] = typer.Option([], "--key", "-k",
                                         help="Todos to open, if no key provided board will be opened")):
+    """
+    Open board or todo in jira
+    """
     urls = open_command(keys)
     for url in urls:
         typer.launch(url)
@@ -31,6 +34,9 @@ def ls(priorities: List[Priority] = typer.Option([], "--priority", "-p", case_se
        all: bool = typer.Option(False, "--all", "-a", help="Show all, even closed, todo's"),
        labels: List[str] = typer.Option([], "--label", "-l", help="Todos needs to have this label")
        ):
+    """
+    Listing a (subset of) todos
+    """
     ls_command(all, priorities, labels)
 
 
@@ -40,6 +46,9 @@ def add(summary: str,
         priority: Priority = typer.Option(Priority.medium, "--priority", "-p", case_sensitive=False),
         labels: List[str] = typer.Option([], "--label", "-l"),
         due_date: datetime = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
+    """
+    Add a new todo
+    """
     add_command(summary, text, priority, labels, due_date)
 
 
@@ -51,15 +60,45 @@ def edit(key: str,
          add_labels: List[str] = typer.Option([], "--label-a", "-la"),
          delete_labels: List[str] = typer.Option([], "--label-d", "-ld"),
          due_date: Optional[datetime] = typer.Option(None, "--due", "-d", formats=["%d-%m-%Y", "%d-%m-%y", "%d-%m"])):
+    """
+    Partially editing a todo
+    """
     edit_command(key, summary, text, priority, add_labels, delete_labels, due_date)
 
 
+@app.command()
+def close(key: str, reason: Optional[str] = typer.Argument(None)):
+    """
+    Closing the todo if it is finished
+    """
+    finish(key, reason)
+
+
+@app.command()
+def finish(key: str, reason: Optional[str] = typer.Argument(None)):
+    """
+    Closing the todo if it is finished
+    """
+    finish_command(key, reason)
+
+
+@app.command()
+def delete(key: str):
+    """
+    Deleting the todo
+    """
+    delete_command(key)
+
+
 profile_app = typer.Typer()
-app.add_typer(profile_app, name="profile")
+app.add_typer(profile_app, name="profile", help="Manage profiles of this cli tool")
 
 
 @profile_app.command()
 def switch(key: str):
+    """
+    Switching between profiles
+    """
     profile_switch_command(key)
 
 
@@ -69,26 +108,18 @@ def create(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
            project_name: str = typer.Option("TodoCli", prompt=True),
            account_name: str = typer.Option(..., prompt=True),
            access_token: str = typer.Option(..., prompt=True, hide_input=True)):
+    """
+    Creating new profiles and switch to the new profile
+    """
     profile_create_command(cloud_url, project_name, account_name, access_token)
 
 
-@profile_app.command()
-def list():
+@profile_app.command(name="list")
+def list_command():
+    """
+    List all profiles
+    """
     profile_list_command()
-
-@app.command()
-def finish(key: str, reason: Optional[str] = typer.Argument(None)):
-    finish_command(key, reason)
-
-
-@app.command()
-def close(key: str, reason: Optional[str] = typer.Argument(None)):
-    finish(key, reason)
-
-
-@app.command()
-def delete(key: str):
-    delete_command(key)
 
 
 if __name__ == "__main__":
