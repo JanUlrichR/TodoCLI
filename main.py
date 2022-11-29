@@ -4,25 +4,17 @@ from typing import List, Optional
 import typer
 
 from commands.add import add_command
-from commands.admin import admin_command
 from commands.delete import delete_command
 from commands.edit import edit_command
 from commands.finish import finish_command
 from commands.ls import ls_command
 from commands.open import open_command
-from commands.profile import profile_command
+from commands.profile.create import profile_create_command
+from commands.profile.list import profile_list_command
+from commands.profile.switch import profile_switch_command
 from issue import Priority
 
 app = typer.Typer()
-
-
-@app.command()
-def admin(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
-                                        prompt="Cloud URL: (e.g. https://jan-robens.atlassian.net)"),
-          project_name: str = typer.Option("TodoCli", prompt=True),
-          account_name: str = typer.Option(..., prompt=True),
-          access_token: str = typer.Option(..., prompt=True, hide_input=True)):
-    admin_command(cloud_url, project_name, account_name, access_token)
 
 
 @app.command()
@@ -62,10 +54,27 @@ def edit(key: str,
     edit_command(key, summary, text, priority, add_labels, delete_labels, due_date)
 
 
-@app.command()
-def profile(key: str):
-    profile_command(key)
+profile_app = typer.Typer()
+app.add_typer(profile_app, name="profile")
 
+
+@profile_app.command()
+def switch(key: str):
+    profile_switch_command(key)
+
+
+@profile_app.command()
+def create(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
+                                         prompt="Cloud URL: (e.g. https://jan-robens.atlassian.net)"),
+           project_name: str = typer.Option("TodoCli", prompt=True),
+           account_name: str = typer.Option(..., prompt=True),
+           access_token: str = typer.Option(..., prompt=True, hide_input=True)):
+    profile_create_command(cloud_url, project_name, account_name, access_token)
+
+
+@profile_app.command()
+def list():
+    profile_list_command()
 
 @app.command()
 def finish(key: str, reason: Optional[str] = typer.Argument(None)):

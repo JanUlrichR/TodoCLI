@@ -1,7 +1,7 @@
 from config import switch_profile, CurrentProfileNotFound, get_all_profiles
 
 
-def profile_command(key: str):
+def profile_switch_command(key: str):
     try:
         switch_profile(key)
         print(f"Switch to profile {key} successful")

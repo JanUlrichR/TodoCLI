@@ -6,7 +6,7 @@ from config import save_profile, Profile, switch_profile
 from jira_helper import create_project, ProjectAlreadyExists, request_jira_raw, request_jira
 
 
-def admin_command(cloud_url: str, project_name: str, account_name: str, access_token: str):
+def profile_create_command(cloud_url: str, project_name: str, account_name: str, access_token: str):
     check_connection_status, check_connection_response = request_jira_raw(cloud_url, "/rest/api/3/myself",
                                                                           account_name, access_token)
 
