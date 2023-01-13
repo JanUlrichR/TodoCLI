@@ -3,6 +3,7 @@ from typing import List, Optional
 
 import typer
 
+from cli_prepocessing import transform_labels
 from commands.add import add_command
 from commands.delete import delete_command
 from commands.edit import edit_command
@@ -37,7 +38,7 @@ def ls(priorities: List[Priority] = typer.Option([], "--priority", "-p", case_se
     """
     Listing a (subset of) todos
     """
-    ls_command(all, priorities, labels)
+    ls_command(all, priorities, transform_labels(labels))
 
 
 @app.command()
@@ -49,7 +50,7 @@ def add(summary: str,
     """
     Add a new todo
     """
-    add_command(summary, text, priority, labels, due_date)
+    add_command(summary, text, priority, transform_labels(labels), due_date)
 
 
 @app.command()
@@ -63,7 +64,7 @@ def edit(key: str,
     """
     Partially editing a todo
     """
-    edit_command(key, summary, text, priority, add_labels, delete_labels, due_date)
+    edit_command(key, summary, text, priority, transform_labels(add_labels), transform_labels(delete_labels), due_date)
 
 
 @app.command()
