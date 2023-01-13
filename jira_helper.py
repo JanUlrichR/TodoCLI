@@ -66,8 +66,8 @@ def create_issue_raw(base_url, username, token, payload):
             headers=headers,
             auth=auth
         )
-        print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
-        return response.status_code, json.loads(response.text)
+        response_data = json.loads(response.text)
+        return response.status_code, response_data,
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
     except requests.exceptions.ConnectionError as errc:

@@ -49,7 +49,9 @@ def add_command(summary: str,
             due_date = due_date.replace(year=datetime.today().year)
         payload_dict["fields"]["duedate"] = due_date.strftime("%Y-%m-%d")
 
-    print(payload_dict)
-
     payload = json.dumps(payload_dict)
-    create_issue(profile, payload)
+    status, created_data = create_issue(profile, payload)
+
+    if status == 201:
+        print(f"Successfully added {created_data['key']} {summary}")
+

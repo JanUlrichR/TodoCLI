@@ -15,6 +15,8 @@ def close_issue(key: str, profile: Profile):
 
     status, response = request_jira(profile, f"/rest/api/3/issue/{key}/transitions", http_method="POST",
                                     payload=payload)
+    if status == 204:
+        print(f"Successfully closed {key}")
     if status == 400:
         print("Issue could not be transitioned")
     if status == 404:
