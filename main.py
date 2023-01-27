@@ -11,7 +11,9 @@ from commands.finish import finish_command
 from commands.ls import ls_command
 from commands.open import open_command
 from commands.profile.create import profile_create_command
+from commands.profile.delete import profile_delete_command
 from commands.profile.list import profile_list_command
+from commands.profile.reset_password import profile_reset_token_command
 from commands.profile.switch import profile_switch_command
 from issue import Priority
 
@@ -108,11 +110,12 @@ def create(cloud_url: str = typer.Option("https://jan-robens.atlassian.net",
                                          prompt="Cloud URL: (e.g. https://jan-robens.atlassian.net)"),
            project_name: str = typer.Option("TodoCli", prompt=True),
            account_name: str = typer.Option(..., prompt=True),
-           access_token: str = typer.Option(..., prompt=True, hide_input=True)):
+           access_token: str = typer.Option(..., prompt=True, hide_input=True),
+           already_exists: bool = typer.Option([], "--exists", "-e")):
     """
     Creating new profiles and switch to the new profile
     """
-    profile_create_command(cloud_url, project_name, account_name, access_token)
+    profile_create_command(cloud_url, project_name, account_name, access_token, already_exists)
 
 
 @profile_app.command(name="list")
@@ -121,6 +124,26 @@ def list_command():
     List all profiles
     """
     profile_list_command()
+
+
+@profile_app.command(name="reset")
+def reset_password_command(project_name: str = typer.Option("TodoCli", prompt=True),
+                           access_token: str = typer.Option(..., prompt=True, hide_input=True)):
+    """
+    Reset Token profiles
+    """
+
+    profile_reset_token_command(project_name, access_token)
+
+
+@profile_app.command(name="delete")
+def profile_delete(project_name: str = typer.Option("TodoCli", prompt=True),
+                   sure: bool = typer.Option("Are you sure ", prompt=True)):
+    """
+    Delete profiles
+    """
+
+    profile_delete_command(project_name, sure)
 
 
 if __name__ == "__main__":

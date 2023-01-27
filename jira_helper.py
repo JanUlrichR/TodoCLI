@@ -80,6 +80,39 @@ def create_issue_raw(base_url, username, token, payload):
     return 400, None
 
 
+def get_project(name: str, base_url: str, username: str, token: str):
+    project_key = name[0:9].upper()
+    url = f"{base_url}/rest/api/3/project/{project_key}"
+
+    auth = HTTPBasicAuth(username, token)
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.request(
+            "GET",
+            url,
+            headers=headers,
+            auth=auth
+        )
+        if (response.status_code == 401):
+            print("TODO")
+        if (response.status_code == 404):
+            print("TODO")
+        return response.status_code, json.loads(response.text)
+    except requests.exceptions.HTTPError as errh:
+        print("Http Error:", errh)
+    except requests.exceptions.ConnectionError as errc:
+        print("Error Connecting:", errc)
+    except requests.exceptions.Timeout as errt:
+        print("Timeout Error:", errt)
+    except requests.exceptions.RequestException as err:
+        print("OOps: Something Else", err)
+
+
 def create_project(name: str, lead_id: str, base_url: str, username: str, token: str):
     url = f"{base_url}/rest/api/3/project"
 

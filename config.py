@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from os import listdir
 from os.path import isfile, join
@@ -25,18 +26,22 @@ class CurrentProfileNotFound(Exception):
     pass
 
 
-def save_profile(base_url: str, account_name: str, access_token: str, project_name: str, project_id: int,
-                 user_id: str) -> Profile:
-    return _save_profile(Profile(base_url, account_name, access_token, project_name, project_id, user_id))
-
-
-def _save_profile(profile: Profile) -> Profile:
+def save_profile(profile: Profile) -> Profile:
     (Path.home() / home_dir_folder_name).mkdir(parents=True, exist_ok=True)
 
     with (Path.home() / home_dir_folder_name / profile.project_name).open('wb') as profile_file:
         pickle.dump(profile, profile_file)
     return profile
 
+
+def delete_profile(profile_name: str):
+    deletion_path = Path.home() / home_dir_folder_name / profile_name
+    if os.path.exists(deletion_path):
+        os.remove(deletion_path)
+
+    if get_current_key() == profile_name:
+        switch_profile(get_all_profiles()[0])
+    return None
 
 def get_all_profiles():
     path = (Path.home() / home_dir_folder_name)
