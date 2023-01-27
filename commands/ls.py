@@ -34,7 +34,7 @@ def get_text(x):
     # Easier to ask for forgiveness than permission
     try:
         return x["content"][0]["content"][0]["text"]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return ""
 
 
@@ -74,7 +74,10 @@ def ls_command(all: bool, priorities: List[Priority], labels: List[str]):
 
 
 def ls_command_by_jql(profile, jql):
-    try:
+    issues = []
+    max_results = 15
+    start_at = 0
+    while (True):
         payload = json.dumps({
             "expand": [
                 "names",
@@ -82,15 +85,24 @@ def ls_command_by_jql(profile, jql):
                 "operations"
             ],
             "jql": jql,
-            "maxResults": 15,
+            "maxResults": max_results,
             "fieldsByKeys": False,
             "fields": [*fields_config],
-            "startAt": 0
+            "startAt": start_at
         })
         status, response = request_jira(profile, "/rest/api/3/search", http_method="POST", payload=payload)
         if status != 200:
             print("Error retrieving the tasks")
             return
-        pretty_print_issues(profile.project_name,response["issues"], fields_config)
+
+        new_issues = response["issues"]
+        issues.extend(new_issues)
+
+        if len(new_issues) < max_results:
+            break
+        start_at = start_at + len(new_issues)
+
+    try:
+        pretty_print_issues(profile.project_name, issues, fields_config)
     except CurrentProfileNotFound as e:
         print(e)
